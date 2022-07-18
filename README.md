@@ -33,7 +33,7 @@ If an user wants to log in, on a different device, will have to call logout API,
 revoke all active tokens for the user.
 
 
-##Selling machine
+## Selling machine
 
 To implement a near life machine operations, the application will keep track of coins inserted in the vending machine.
 The accepted coins are: [5,10,20,50,100], for each of them it will be saved a row in selling_machine table, keeping track 
