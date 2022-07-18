@@ -1,0 +1,866 @@
+openapi: 3.0.1
+info:
+  title: MVP Match - Backend#1
+  description: API for a vending machine
+  version: "0.1"
+paths:
+  /api/v1/logout:
+    post:
+      tags:
+        - session
+      summary: Logout sessions
+      operationId: logout
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+      responses:
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+  /api/v1/products:
+    get:
+      tags:
+        - products
+      summary: Get list of products
+      operationId: listProducts
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+        - name: offset
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      responses:
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "200":
+          description: list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse_Object_'
+    post:
+      tags:
+        - products
+      summary: Create product
+      operationId: createProduct
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+        required: true
+      responses:
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "201":
+          description: product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+  /api/v1/products/{productId}:
+    get:
+      tags:
+        - products
+      summary: Get product by id
+      operationId: getProduct
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "200":
+          description: product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+    put:
+      tags:
+        - products
+      summary: Update product
+      operationId: updateProduct
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+        required: true
+      responses:
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "202":
+          description: product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+  /api/v1/selling-machine/buy:
+    post:
+      tags:
+        - selling-machine
+      summary: Buy product
+      operationId: buyProduct
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyRequest'
+        required: true
+      responses:
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "201":
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyResponse'
+  /api/v1/selling-machine/deposit:
+    post:
+      tags:
+        - selling-machine
+      summary: Deposit coin in user account
+      operationId: deposit
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositRequest'
+        required: true
+      responses:
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "201":
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepositResponse'
+  /api/v1/selling-machine/reset:
+    put:
+      tags:
+        - selling-machine
+      summary: Reset deposit
+      operationId: resetDeposit
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+      responses:
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "202":
+          description: response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                description: response
+  /api/v1/users:
+    post:
+      tags:
+        - user
+      summary: Register user
+      operationId: userRegistration
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserModel'
+        required: true
+      responses:
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "201":
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserModel'
+  /api/v1/users/{id}:
+    get:
+      tags:
+        - user
+      summary: User by id
+      operationId: getUserById
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "200":
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserModel'
+    put:
+      tags:
+        - user
+      summary: Update user
+      operationId: updateAccount
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: confirmPassword
+          in: query
+          required: false
+          schema:
+            type: boolean
+            nullable: true
+            default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserModel'
+        required: true
+      responses:
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "202":
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserModel'
+    delete:
+      tags:
+        - user
+      summary: Delete user by id
+      operationId: deleteAccount
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Bearer Token
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "403":
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+components:
+  schemas:
+    BaseModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+    BuyRequest:
+      required:
+        - productId
+        - quantity
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+          nullable: true
+        quantity:
+          minimum: 1
+          type: integer
+          format: int32
+          nullable: true
+    BuyResponse:
+      required:
+        - change
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+          nullable: true
+        spentAmount:
+          type: integer
+          format: int32
+          nullable: true
+        change:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+    DepositRequest:
+      required:
+        - coin
+      type: object
+      properties:
+        coin:
+          type: integer
+          format: int32
+          nullable: true
+    DepositResponse:
+      type: object
+      properties:
+        deposit:
+          type: integer
+          format: int32
+          nullable: true
+    ExceptionResponse:
+      allOf:
+        - $ref: '#/components/schemas/ExceptionResponse'
+        - required:
+            - statusCode
+            - timestamp
+          type: object
+          properties:
+            statusCode:
+              $ref: '#/components/schemas/HttpStatus'
+            message:
+              type: string
+              nullable: true
+            errorCode:
+              type: string
+              nullable: true
+            origin:
+              type: string
+              nullable: true
+            timestamp:
+              type: string
+              format: date-time
+    HttpStatus:
+      type: string
+      enum:
+        - CONTINUE
+        - SWITCHING_PROTOCOLS
+        - PROCESSING
+        - OK
+        - CREATED
+        - ACCEPTED
+        - NON_AUTHORITATIVE_INFORMATION
+        - NO_CONTENT
+        - RESET_CONTENT
+        - PARTIAL_CONTENT
+        - MULTI_STATUS
+        - ALREADY_IMPORTED
+        - IM_USED
+        - MULTIPLE_CHOICES
+        - MOVED_PERMANENTLY
+        - FOUND
+        - SEE_OTHER
+        - NOT_MODIFIED
+        - USE_PROXY
+        - SWITCH_PROXY
+        - TEMPORARY_REDIRECT
+        - PERMANENT_REDIRECT
+        - BAD_REQUEST
+        - UNAUTHORIZED
+        - PAYMENT_REQUIRED
+        - FORBIDDEN
+        - NOT_FOUND
+        - METHOD_NOT_ALLOWED
+        - NOT_ACCEPTABLE
+        - PROXY_AUTHENTICATION_REQUIRED
+        - REQUEST_TIMEOUT
+        - CONFLICT
+        - GONE
+        - LENGTH_REQUIRED
+        - PRECONDITION_FAILED
+        - REQUEST_ENTITY_TOO_LARGE
+        - REQUEST_URI_TOO_LONG
+        - UNSUPPORTED_MEDIA_TYPE
+        - REQUESTED_RANGE_NOT_SATISFIABLE
+        - EXPECTATION_FAILED
+        - I_AM_A_TEAPOT
+        - ENHANCE_YOUR_CALM
+        - UNPROCESSABLE_ENTITY
+        - LOCKED
+        - FAILED_DEPENDENCY
+        - UNORDERED_COLLECTION
+        - UPGRADE_REQUIRED
+        - PRECONDITION_REQUIRED
+        - TOO_MANY_REQUESTS
+        - REQUEST_HEADER_FIELDS_TOO_LARGE
+        - NO_RESPONSE
+        - BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS
+        - UNAVAILABLE_FOR_LEGAL_REASONS
+        - REQUEST_HEADER_TOO_LARGE
+        - INTERNAL_SERVER_ERROR
+        - NOT_IMPLEMENTED
+        - BAD_GATEWAY
+        - SERVICE_UNAVAILABLE
+        - GATEWAY_TIMEOUT
+        - HTTP_VERSION_NOT_SUPPORTED
+        - VARIANT_ALSO_NEGOTIATES
+        - INSUFFICIENT_STORAGE
+        - LOOP_DETECTED
+        - BANDWIDTH_LIMIT_EXCEEDED
+        - NOT_EXTENDED
+        - NETWORK_AUTHENTICATION_REQUIRED
+        - CONNECTION_TIMED_OUT
+    Object:
+      type: object
+    PageResponse_Object_:
+      required:
+        - items
+        - limit
+        - offset
+        - total
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Object'
+        offset:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int32
+    ProductModel:
+      allOf:
+        - $ref: '#/components/schemas/BaseModel'
+        - required:
+            - cost
+            - inStock
+            - name
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: true
+            createdAt:
+              type: string
+              format: date-time
+              nullable: true
+            updatedAt:
+              type: string
+              format: date-time
+              nullable: true
+            name:
+              minLength: 1
+              type: string
+              nullable: true
+            inStock:
+              minimum: 1
+              type: integer
+              format: int32
+              nullable: true
+            cost:
+              type: integer
+              format: int32
+              nullable: true
+            sellerId:
+              type: string
+              format: uuid
+              nullable: true
+    UserModel:
+      allOf:
+        - $ref: '#/components/schemas/BaseModel'
+        - required:
+            - role
+            - username
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: true
+            createdAt:
+              type: string
+              format: date-time
+              nullable: true
+            updatedAt:
+              type: string
+              format: date-time
+              nullable: true
+            username:
+              minLength: 1
+              pattern: "^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+              type: string
+              nullable: true
+            password:
+              pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$"
+              type: string
+              nullable: true
+            role:
+              nullable: true
+              oneOf:
+                - $ref: '#/components/schemas/UserRole'
+            deposit:
+              type: integer
+              format: int32
+              nullable: true
+    UserRole:
+      type: string
+      enum:
+        - BUYER
+        - SELLER

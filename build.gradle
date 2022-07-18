@@ -1,0 +1,94 @@
+plugins {
+    id("org.jetbrains.kotlin.jvm") version "1.5.21"
+    id("org.jetbrains.kotlin.kapt") version "1.5.21"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("io.micronaut.application") version "3.2.1"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
+}
+
+version = "0.1"
+group = "it.stefanotroia.mvpmatch"
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    runtime("lambda")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("it.stefanotroia.mvpmatch.*")
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    kapt("io.micronaut.openapi:micronaut-openapi:3.1.0")
+    kapt("io.micronaut.security:micronaut-security-annotations")
+
+
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-aop")
+    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
+    implementation("javax.annotation:javax.annotation-api")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("io.micronaut:micronaut-validation")
+
+    implementation('io.micronaut:micronaut-http-server-netty:1.1.0')
+    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.5")
+
+    implementation("io.swagger.core.v3:swagger-annotations")
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+"
+
+    //security
+    implementation 'com.auth0:java-jwt:3.18.3'
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation 'org.springframework.security:spring-security-crypto:5.7.1'
+    //database
+    implementation('org.jetbrains.exposed:exposed-java-time:0.36.1')
+    implementation "com.zaxxer:HikariCP:3.4.2"
+    runtimeOnly("org.jetbrains.exposed:exposed-jdbc:0.36.1")
+    runtimeOnly("org.postgresql:postgresql:42.3.0")
+    //logging
+    implementation("org.slf4j:slf4j-api:1.7.29")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("ch.qos.logback.contrib:logback-jackson:0.1.5")
+    //test
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("io.micronaut.test:micronaut-test-junit5:3.4.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:{junitVersion}")
+    testRuntimeOnly("com.h2database:h2")
+
+}
+
+
+application {
+    mainClass.set("it.stefanotroia.mvpmatch.ApplicationKt")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+}
+
+tasks {
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+
+}
+
+
+test{
+    useJUnitPlatform()
+}

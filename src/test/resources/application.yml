@@ -1,0 +1,16 @@
+datasources:
+  default:
+    url: jdbc:h2:mem:devDb
+    driverClassName: org.h2.Driver
+    username: mvp
+    password: 'mvp'
+    schema-generate: CREATE_DROP
+    dialect: H2
+
+mvp:
+  database:
+    jdbcUrl: ${datasources.default.url}
+    driverClassName: ${datasources.default.driverClassName}
+    username: ${datasources.default.username}
+    password: ${datasources.default.password}
+    maximumPoolSize: 5
