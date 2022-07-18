@@ -2,6 +2,8 @@
 
 ## Project Dependencies
 
+- Java 11
+- Kotlin 1.5.21
 - Micronaut 3.5.2 
 - Micronaut Test / Junit 5
 - Micronaut Security
